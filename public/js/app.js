@@ -34,21 +34,44 @@ sampleAlbums.push({
            });
 /* end of hard-coded data */
 
-
-
-
 $(document).ready(function() {
-  console.log('app.js loaded!');
+  // console.log('now ok to look for elements');
 
+  $.get('http://localhost:3000/api/albums')
+    .done(function (data) {
+      var kanyeAlbums = data;
+      kanyeAlbums.forEach(function (kanyeAlbum) {
+        renderAlbum(kanyeAlbum);
+    });
+  });
+  //create on sumit for form
+  $("form").on("submit", function(event) {
+    event.preventDefault();
+    //put serialize inside function
+    var formData = $(this).serialize();
+    console.log(formData);
+    //ajax call to post to serialize the data
+    $.ajax({
+      type: 'POST',
+      url: '/api/albums',
+      datatype: 'json',
+      data: formData
+    });
+    //ajax post for req.body.genre
+    $.ajax({
+      type: 'POST',
+      url: '/api/albums',
+      datatype: 'json',
+      data: formData
+    });
+    //reset submit
+    $(this).trigger("reset");
+   });
 });
-
-
-
-
 
 // this function takes a single album and renders it to the page
 function renderAlbum(album) {
-  console.log('rendering album:', album);
+  // console.log('rendering album:', album);
 
   var albumHtml =
   "        <!-- one album -->" +
@@ -65,15 +88,15 @@ function renderAlbum(album) {
   "                    <ul class='list-group'>" +
   "                      <li class='list-group-item'>" +
   "                        <h4 class='inline-header'>Album Name:</h4>" +
-  "                        <span class='album-name'>" + "HARDCODED ALBUM NAME" + "</span>" +
+  "                        <span class='album-name'>" + album.name + "</span>" +
   "                      </li>" +
   "                      <li class='list-group-item'>" +
   "                        <h4 class='inline-header'>Artist Name:</h4>" +
-  "                        <span class='artist-name'>" +  "HARDCODED ARTIST NAME"+ "</span>" +
+  "                        <span class='artist-name'>" +  album.artistName + "</span>" +
   "                      </li>" +
   "                      <li class='list-group-item'>" +
   "                        <h4 class='inline-header'>Released date:</h4>" +
-  "                        <span class='album-releaseDate'>" + "HARDCODED ALBUM RELEASE" + "</span>" +
+  "                        <span class='album-releaseDate'>" + album.releaseDate + "</span>" +
   "                      </li>" +
   "                    </ul>" +
   "                  </div>" +
@@ -90,5 +113,5 @@ function renderAlbum(album) {
   "          <!-- end one album -->";
 
   // render to the page with jQuery
-
+  $("#albums").append(albumHtml);
 }
