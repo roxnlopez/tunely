@@ -57,13 +57,6 @@ $(document).ready(function() {
       datatype: 'json',
       data: formData
     });
-    //ajax post for req.body.genre
-    $.ajax({
-      type: 'POST',
-      url: '/api/albums',
-      datatype: 'json',
-      data: formData
-    });
     //reset submit
     $(this).trigger("reset");
    });

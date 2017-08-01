@@ -83,27 +83,15 @@ app.get('/api/albums', function album_index(req, res){
   });
 });
 
-app.post('/api/albums', function(req,res) {
-  console.log(req.body);
+app.post('/api/albums', function album_new (req,res) {
+  console.log(req.body.genres);
   db.Album.create(req.body, function(err, album) {
     if (err) {
       res.send("error!");
     }
+    var genres = req.body.genres.split(", ");
+    console.log(genres);
     res.json(album);
-  });
-});  
-
-app.post('/api/albums', function(req,res) {
-   console.log("alriiiit");
-  console.log(req.body.genres);
- 
-  db.Album.create(req.body.genres, function(err, album) {
-    if (err) {
-      res.send("error!");
-    }
-    var genre = req.body.genres;
-    console.log(req.body.genres);
-    res.json(req.body.genres);
   });
 });
 
