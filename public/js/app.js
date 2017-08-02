@@ -62,24 +62,26 @@ $(document).ready(function() {
    });
 });
 
-function buildSongsHtml(songs) {
-  var songText = "-";
-  console.log(albums);
-  songs.forEach(function(song) {
-    songText = songText + "(" + song.TrackNumber + ")" + song.name + '-';
-  });
-  var songsHtml="Songs: " + " " + songText + " " + " ";
-  return songsHtml;
-}
-
-
 // this function takes a single album and renders it to the page
 function renderAlbum(album) {
-  // console.log('rendering album:', album);
+  console.log('rendering album:', album);
+  var listOfSongs = "";
+  album.songs.forEach(function(song) {
+    listOfSongs = listOfSongs + "-" + song.name;
+  });
+
+$('#albums').on('click', '.add-song', function(e) {
+    console.log("adding song");
+    var id = $(this).parents('.album').data('album-id');
+    console.log('id', id);
+  var currentAlbumId;
+  $('#songModal').data('album-id', currentAlbumId);
+});
+
 
   var albumHtml =
   "        <!-- one album -->" +
-  "        <div class='row album' data-album-id='" + "HARDCODED ALBUM ID" + "'>" +
+  "        <div class='row album' data-album-id='" + album._id + "'>" +
   "          <div class='col-md-10 col-md-offset-1'>" +
   "            <div class='panel panel-default'>" +
   "              <div class='panel-body'>" +
@@ -114,6 +116,7 @@ function renderAlbum(album) {
   "              </div>" + // end of panel-body
 
   "              <div class='panel-footer'>" +
+  "                <button class='btn btn-primary add-song'>Add Song</button>" +
   "              </div>" +
 
   "            </div>" +
@@ -122,5 +125,4 @@ function renderAlbum(album) {
 
   // render to the page with jQuery
   $("#albums").append(albumHtml);
-  buildSongsHtml();
 }
