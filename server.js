@@ -90,7 +90,7 @@ app.post('/api/albums', function album_new (req,res) {
       res.send("error!");
     }
     var genres = req.body.genres.split(", ");
-    console.log(genres);
+    console.log(req.body.genres);
     res.json(album);
   });
 });
