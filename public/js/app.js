@@ -63,7 +63,8 @@ $(document).ready(function() {
 });
 
 function buildSongsHtml(songs) {
-  var songText = "--";
+  var songText = "-";
+  console.log(albums);
   songs.forEach(function(song) {
     songText = songText + "(" + song.TrackNumber + ")" + song.name + '-';
   });
@@ -101,6 +102,10 @@ function renderAlbum(album) {
   "                        <h4 class='inline-header'>Released date:</h4>" +
   "                        <span class='album-releaseDate'>" + album.releaseDate + "</span>" +
   "                      </li>" +
+  "                     <li class='list-group-item'>" +
+  "                       <h4 class='inline-header'>Songs:</h4>"  +
+  "                       <span>  - (1) Famous - (2) All of the Lights - (3) Guilt Trip - (4) Paranoid - (5) Ultralight Beam - (6) Runaway - (7) Stronger - </span>" +
+  "                     </li>" +
   "                    </ul>" +
   "                  </div>" +
   "                </div>" +
