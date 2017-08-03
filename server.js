@@ -95,6 +95,13 @@ app.post('/api/albums', function album_new (req,res) {
   });
 });
 
+app.post('/api/albums/:album_id/songs', function album_index(req, res){
+  console.log(req.params.album_id);
+  db.Album.find({}, function(err, albums) {
+    res.json(albums);
+  });
+});
+
 /**********
  * SERVER *
  **********/

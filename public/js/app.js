@@ -35,15 +35,37 @@ sampleAlbums.push({
 /* end of hard-coded data */
 
 $(document).ready(function() {
-  // console.log('now ok to look for elements');
+  console.log('now ok to look for elements');
 
-  $.get('http://localhost:3000/api/albums')
-    .done(function (data) {
+  $.get('http://localhost:3000/api/albums').done(function (data) {
       var kanyeAlbums = data;
       kanyeAlbums.forEach(function (kanyeAlbum) {
         renderAlbum(kanyeAlbum);
-    });
+      });
+      //apply id 
+      $('.album').on('click', '.add-song', function(e) {
+        var id = $(this).parents('.album').data('album-id');
+        console.log(id);
+        $('#songModal').data('album-id', id);
+        $('#songModal').modal();
+      });
+      $('#saveSong').on('click', function(){
+          var id = $(this).parents('#songModal').data('album-id');
+          var newSong = $('#songName').val();
+          var theTrack = $('#trackNumber').val();
+          console.log(newSong);
+          console.log(theTrack);
+          console.log(id);
+          // whenver you save a new song, it saves not just the name but also the track
+          $.ajax({
+            type: 'POST',
+            url: '/api/albums/' + id + '/songs',
+            datatype: 'json',
+            data: newSong
+          });
+      });
   });
+
   //create on sumit for form
   $("form").on("submit", function(event) {
     event.preventDefault();
@@ -64,19 +86,11 @@ $(document).ready(function() {
 
 // this function takes a single album and renders it to the page
 function renderAlbum(album) {
-  console.log('rendering album:', album);
   var listOfSongs = "";
   album.songs.forEach(function(song) {
     listOfSongs = listOfSongs + "-" + song.name;
   });
 
-$('#albums').on('click', '.add-song', function(e) {
-    console.log("adding song");
-    var id = $(this).parents('.album').data('album-id');
-    console.log('id', id);
-  var currentAlbumId;
-  $('#songModal').data('album-id', currentAlbumId);
-});
 
 
   var albumHtml =
@@ -125,4 +139,5 @@ $('#albums').on('click', '.add-song', function(e) {
 
   // render to the page with jQuery
   $("#albums").append(albumHtml);
+
 }
