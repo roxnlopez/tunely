@@ -49,19 +49,28 @@ $(document).ready(function() {
         $('#songModal').data('album-id', id);
         $('#songModal').modal();
       });
-      $('#saveSong').on('click', function(){
+      $('#saveSong').on('click', function handleNewSongSubmit(){
           var id = $(this).parents('#songModal').data('album-id');
+          $('#saveSong').data('album-id', id);
+          $('#saveSong').modal();
           var newSong = $('#songName').val();
           var theTrack = $('#trackNumber').val();
           console.log(newSong);
           console.log(theTrack);
           console.log(id);
           // whenver you save a new song, it saves not just the name but also the track
+
           $.ajax({
             type: 'POST',
             url: '/api/albums/' + id + '/songs',
             datatype: 'json',
-            data: newSong
+            data: {
+              name: newSong,
+              trackNumber: theTrack
+            },
+            success: function() {
+              console.log('yay!');
+            }
           });
       });
   });
