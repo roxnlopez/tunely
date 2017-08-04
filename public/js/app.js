@@ -34,6 +34,7 @@ sampleAlbums.push({
            });
 /* end of hard-coded data */
 
+var id;
 $(document).ready(function() {
   console.log('now ok to look for elements');
 
@@ -44,36 +45,50 @@ $(document).ready(function() {
       });
       //apply id 
       $('.album').on('click', '.add-song', function(e) {
-        var id = $(this).parents('.album').data('album-id');
+        id = $(this).parents('.album').data('album-id');
         console.log(id);
         $('#songModal').data('album-id', id);
         $('#songModal').modal();
       });
       $('#saveSong').on('click', function handleNewSongSubmit(){
-          var id = $(this).parents('#songModal').data('album-id');
-          $('#saveSong').data('album-id', id);
-          $('#saveSong').modal();
+        console.log(id);
           var newSong = $('#songName').val();
           var theTrack = $('#trackNumber').val();
           console.log(newSong);
           console.log(theTrack);
-          console.log(id);
+          var datastring = '&name=' + newSong + '&theTrack=' + theTrack;
           // whenver you save a new song, it saves not just the name but also the track
 
           $.ajax({
             type: 'POST',
             url: '/api/albums/' + id + '/songs',
             datatype: 'json',
-            data: {
-              name: newSong,
-              trackNumber: theTrack
-            },
-            success: function() {
-              console.log('yay!');
+            data: datastring,
+            success: successNewSong,
+            error: function(){
+              console.log("error");
             }
           });
+          $(this).trigger("reset");
+          $('#songModal').modal("hide");
       });
   });
+
+  function successNewSong() {
+    $.ajax({
+            type: 'GET',
+            url: '/api/albums/' + id,
+            success: renderUpdateAlbum
+          });
+  }
+
+  function renderUpdateAlbum(json) {
+    console.log("hey");
+    var albumToUpdate = $("div").find("[data-album-id=" + id + "]");
+    console.log(json);
+    albumToUpdate.remove();
+    renderAlbum(json);
+  }
 
   //create on sumit for form
   $("form").on("submit", function(event) {
@@ -93,12 +108,21 @@ $(document).ready(function() {
    });
 });
 
+function buildSongs(songs){
+  var listOfSongs = "";
+  songs.forEach(function(song) {
+    listOfSongs = listOfSongs + "(" + song.trackNumber + ")" + song.name + "-";
+    
+  });
+  var songHTML = "<li class='list-group-item'>" +
+  "                       <h4 class='inline-header'>Songs:</h4>"  +
+  "                       <span>" + listOfSongs + "</span>" +
+  "                     </li>";
+  return songHTML;
+}
+
 // this function takes a single album and renders it to the page
 function renderAlbum(album) {
-  var listOfSongs = "";
-  album.songs.forEach(function(song) {
-    listOfSongs = listOfSongs + "-" + song.name;
-  });
 
 
 
@@ -126,11 +150,7 @@ function renderAlbum(album) {
   "                      <li class='list-group-item'>" +
   "                        <h4 class='inline-header'>Released date:</h4>" +
   "                        <span class='album-releaseDate'>" + album.releaseDate + "</span>" +
-  "                      </li>" +
-  "                     <li class='list-group-item'>" +
-  "                       <h4 class='inline-header'>Songs:</h4>"  +
-  "                       <span>  - (1) Famous - (2) All of the Lights - (3) Guilt Trip - (4) Paranoid - (5) Ultralight Beam - (6) Runaway - (7) Stronger - </span>" +
-  "                     </li>" +
+  "                      </li>" + buildSongs(album.songs) + 
   "                    </ul>" +
   "                  </div>" +
   "                </div>" +
