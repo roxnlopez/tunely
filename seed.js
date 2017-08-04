@@ -51,7 +51,7 @@ sampleSongs.push({ name: 'Runaway',
 });
 sampleSongs.push({ name: 'Stronger',
                    trackNumber: 7
-});
+}); 
 
 
 db.Album.remove({}, function(err, albums){
